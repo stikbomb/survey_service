@@ -5,14 +5,15 @@ from questionnaires.models import Questionnaire, Question, PossibleAnswer
 
 
 class PossibleAnswerSerializer(ModelSerializer):
-
+    """ Сериализатор возможного варианта ответа. """
     class Meta:
         model = PossibleAnswer
         fields = '__all__'
 
 
 class QuestionSerializer(ModelSerializer):
-    possible_answers = PossibleAnswerSerializer(read_only=True, many=True)
+    """ Сериализатор вопроса. """
+    possible_answers = PossibleAnswerSerializer(many=True)
 
     class Meta:
         model = Question
@@ -20,7 +21,8 @@ class QuestionSerializer(ModelSerializer):
 
 
 class QuestionnaireSerializer(ModelSerializer):
-    questions = QuestionSerializer(read_only=True, many=True)
+    """ Сериалазтор опроса. """
+    questions = QuestionSerializer(many=True)
 
     class Meta:
         model = Questionnaire
