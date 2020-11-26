@@ -8,13 +8,15 @@ class Questionnaire(Model):
     """
     Модель опроса.
     Опросник считается активным в промежутке дат между beginning_date и expiration_date.
-    После заполнения поля beginning_date нельзя добавлять, изменять или удалять вопросы в этом опросе.
+    Все поля обязательны для заполнения.
+    После заполнения поля beginning_date его нельзя изменять.
     Удалить опрос можно в любом время.
+    Опрос должен содержать минимум два вопроса.
     """
     title = CharField(max_length=100)
-    beginning_date = DateField(null=True, blank=True)
-    expiration_date = DateField(null=True, blank=True)
-    description = TextField(blank=True, default='')
+    beginning_date = DateField()
+    expiration_date = DateField()
+    description = TextField()
 
 
 class Question(Model):

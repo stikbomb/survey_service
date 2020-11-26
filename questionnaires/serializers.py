@@ -45,3 +45,22 @@ class QuestionnaireSerializer(ModelSerializer):
     class Meta:
         model = Questionnaire
         fields = '__all__'
+
+    def validate(self, attrs):
+        if len(attrs['questions']) < 2:
+            raise ValidationError('Опрос должен иметь минимум два вопроса. ')
+
+        return attrs
+
+    def create(self, validated_data):
+        questions_data = validated_data.pop('questions')
+
+        questionnaire = Questionnaire.objects.create(**validated_data)
+
+        for question_data in questions_data:
+            question_data['questionnaire'] = questionnaire.id
+            question_serializer = QuestionSerializer(data=question_data)
+            if question_serializer.is_valid(raise_exception=True):
+                question_serializer.save()
+
+        return questionnaire
