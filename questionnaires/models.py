@@ -1,17 +1,20 @@
 """
 Модели для работы с опросами.
 """
-from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField
+from django.db.models import Model, CharField, ForeignKey, CASCADE, TextField, DateField
 
 
 class Questionnaire(Model):
     """
     Модель опроса.
-    Опросник считается активным в промежутке дат между begining_date и expiration_date.
-    После заполнения поля beginig_date нельзя добавлять, изменять или удалять вопросы в этом опросе.
+    Опросник считается активным в промежутке дат между beginning_date и expiration_date.
+    После заполнения поля beginning_date нельзя добавлять, изменять или удалять вопросы в этом опросе.
     Удалить опрос можно в любом время.
     """
-    pass
+    title = CharField(max_length=100)
+    beginning_date = DateField(null=True, blank=True)
+    expiration_date = DateField(null=True, blank=True)
+    description = TextField(blank=True, default='')
 
 
 class Question(Model):
