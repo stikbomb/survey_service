@@ -16,7 +16,7 @@ class QuestionnaireLCView(ListCreateAPIView):
 
 
 class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
-    """ Вид для получение, реадктирования и удаления опроса по его ID. """
+    """ Вид для получение, редактирования и удаления опроса по его ID. """
     permission_classes = (IsAdminUser,)
 
     model = Questionnaire
@@ -32,7 +32,7 @@ class QuestionLCView(ListCreateAPIView):
     serializer_class = QuestionSerializer
 
 
-class QuestionRUDView(ListCreateAPIView):
+class QuestionRUDView(RetrieveUpdateDestroyAPIView):
     """ Вид для получения, редактирования и удаления вопроса по его ID. """
     permission_classes = (IsAdminUser,)
 
