@@ -7,3 +7,8 @@ class DeletionError(APIException):
     status_code = 400
     default_code = "DELETION_ERROR"
 
+
+class EditionError(APIException):
+    """ Исключение для случаев изменения запрещённых к изменению полей. """
+    status_code = 400
+    default_code = 'EDITION_ERROR'

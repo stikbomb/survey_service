@@ -15,12 +15,15 @@ class PossibleAnswerSerializer(ModelSerializer):
 class QuestionSerializer(ModelSerializer):
     """ Сериализатор вопроса. """
     possible_answers = PossibleAnswerSerializer(many=True)
-
+    questionnaire = PrimaryKeyRelatedField(queryset=Questionnaire.objects.all(), required=False)
     class Meta:
         model = Question
         fields = '__all__'
 
     def validate(self, attrs):
+        if self.partial:
+            return attrs
+
         if attrs['type'] in ('O', 'M') and len(attrs['possible_answers']) < 2:
             raise ValidationError('Вопрос с вариантами ответа должен иметь минимум два возможных ответа.')
 
@@ -47,6 +50,9 @@ class QuestionnaireSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, attrs):
+        if self.partial:
+            return attrs
+
         if len(attrs['questions']) < 2:
             raise ValidationError('Опрос должен иметь минимум два вопроса. ')
 

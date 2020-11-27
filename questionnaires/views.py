@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAdminUser
 
 from .serializers import QuestionnaireSerializer, QuestionSerializer, PossibleAnswerSerializer
 from .models import Questionnaire, Question, PossibleAnswer
-from core.exceptions import DeletionError
+from core.exceptions import DeletionError, EditionError
 
 
 class QuestionnaireLCView(ListCreateAPIView):
@@ -23,6 +23,19 @@ class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
     queryset = Questionnaire.objects.all()
     model = Questionnaire
     serializer_class = QuestionnaireSerializer
+
+    def _check_beginning_date_change(self, request):
+        print(request.data['beginning_date'])
+        print(self.get_object().beginning_date)
+        try:
+            if request.data['beginning_date'] != str(self.get_object().beginning_date):
+                raise EditionError('Поле "beginning_date" нельзя отредактировать.')
+        except KeyError:
+            pass
+
+    def patch(self, request, *args, **kwargs):
+        self._check_beginning_date_change(request)
+        return super().patch(self, request, *args, **kwargs)
 
 
 class QuestionLCView(ListCreateAPIView):
