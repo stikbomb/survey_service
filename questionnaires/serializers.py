@@ -54,7 +54,10 @@ class QuestionnaireSerializer(ModelSerializer):
             return attrs
 
         if len(attrs['questions']) < 2:
-            raise ValidationError('Опрос должен иметь минимум два вопроса. ')
+            raise ValidationError('Опрос должен иметь минимум один вопрос. ')
+
+        if attrs['expiration_date'] < attrs['beginning_date']:
+            raise ValidationError('Дата окончания опроса не может быть раньше даты его начала. ')
 
         return attrs
 
