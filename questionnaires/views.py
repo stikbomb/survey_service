@@ -77,7 +77,7 @@ class QuestionRUDView(RetrieveUpdateDestroyAPIView):
     def put(self, request, *args, **kwargs):
         self._check_type_change(request)
         return super().put(self, request, *args, **kwargs)
-    
+
     def patch(self, request, *args, **kwargs):
         self._check_type_change(request)
         return super().patch(self, request, *args, **kwargs)
