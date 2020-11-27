@@ -25,7 +25,7 @@ class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
     model = Questionnaire
     serializer_class = QuestionnaireSerializer
 
-    def _check_beginning_date_change(self, request):
+    def _check_date_change(self, request):
         try:
             if request.data['beginning_date'] != str(self.get_object().beginning_date):
                 raise EditionError('Поле "beginning_date" нельзя отредактировать.')
@@ -35,12 +35,12 @@ class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
             pass
 
     def patch(self, request, *args, **kwargs):
-        self._check_beginning_date_change(request)
+        self._check_date_change(request)
         return super().patch(self, request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        self._check_beginning_date_change(request)
-        return super().patch(self.request, *args, **kwargs)
+        self._check_date_change(request)
+        return super().put(self.request, *args, **kwargs)
 
 
 class QuestionLCView(ListCreateAPIView):
@@ -66,6 +66,21 @@ class QuestionRUDView(RetrieveUpdateDestroyAPIView):
             raise DeletionError(detail='Невозможно удалить вопрос: опрос должен содержать минимум два вопроса.')
 
         return super().delete(self, request, *args, **kwargs)
+
+    def _check_type_change(self, request):
+        try:
+            if request.data['type'] != self.get_object().type:
+                raise EditionError('После создания вопроса нельзя изменить его тип.')
+        except KeyError:
+            pass
+
+    def put(self, request, *args, **kwargs):
+        self._check_type_change(request)
+        return super().put(self, request, *args, **kwargs)
+    
+    def patch(self, request, *args, **kwargs):
+        self._check_type_change(request)
+        return super().patch(self, request, *args, **kwargs)
 
 
 class PossibleAnswerCLView(ListCreateAPIView):
