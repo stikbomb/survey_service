@@ -18,7 +18,7 @@ class QuestionSerializer(ModelSerializer):
     questionnaire = PrimaryKeyRelatedField(queryset=Questionnaire.objects.all(), required=False)
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = 'id', 'questionnaire', 'text', 'type', 'possible_answers'
 
     def validate(self, attrs):
         if self.partial:
@@ -47,7 +47,8 @@ class QuestionnaireSerializer(ModelSerializer):
 
     class Meta:
         model = Questionnaire
-        fields = '__all__'
+        fields = 'id', 'title', 'beginning_date', 'expiration_date', 'description', 'questions'
+
 
     def validate(self, attrs):
         if self.partial:
