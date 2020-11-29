@@ -70,6 +70,7 @@ class PassedSurveyCreateSerializer(Serializer):
 class PassedQuestionListSerializer(ModelSerializer):
     """ Сериализатор для вывода списка пройденных вопросов и ответов. """
     answers = SlugRelatedField(many=True, read_only=True, slug_field='text')
+
     class Meta:
         model = PassedQuestion
         fields = ('text', 'type', 'answers')
@@ -78,6 +79,56 @@ class PassedQuestionListSerializer(ModelSerializer):
 class PassedSurveyListSerializer(ModelSerializer):
     """ Сериализатор для вывода списка пройденных опросов. """
     passed_questions = PassedQuestionListSerializer(many=True)
+
     class Meta:
         model = PassedSurvey
         fields = ('user', 'title', 'beginning_date', 'expiration_date', 'description', 'passed_questions')
+
+
+class AnswerSerializer(ModelSerializer):
+    """ Сериализатор для ответа пройденного опроса с простой формой запроса. """
+    class Meta:
+        model = Answer
+        fields = ('text',)
+
+
+class PassedQuestionSimpleCreateSerializer(ModelSerializer):
+    """ Сериализатор для добавления вопроса пройденного опроса с простой формой запроса. """
+    answers = AnswerSerializer(many=True)
+    survey = PrimaryKeyRelatedField(queryset=PassedSurvey.objects.all(), write_only=True, required=False)
+
+    class Meta:
+        model = PassedQuestion
+        fields = '__all__'
+
+    def create(self, validated_data):
+        answers_data = validated_data.pop('answers')
+
+        question = PassedQuestion.objects.create(**validated_data)
+
+        for answer_data in answers_data:
+            Answer.objects.create(passed_question=question, **answer_data)
+
+        return question
+
+
+class PassesSurveySimpleCreateSerializer(ModelSerializer):
+    """ Сериализатор для добавления пройденного опроса с простой формой запроса. """
+    passed_questions = PassedQuestionSimpleCreateSerializer(many=True)
+
+    class Meta:
+        model = PassedSurvey
+        fields = '__all__'
+
+    def create(self, validated_data):
+        questions_data = validated_data.pop('passed_questions')
+        survey = PassedSurvey.objects.create(**validated_data)
+
+        for question_data in questions_data:
+            question_data.update({'survey': survey.id})
+
+        questions_serializer = PassedQuestionSimpleCreateSerializer(data=questions_data, many=True)
+        if questions_serializer.is_valid(raise_exception=True):
+            questions_serializer.save()
+
+        return survey

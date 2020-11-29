@@ -1,12 +1,13 @@
 """ Виды для работы с активными опросами - получение и заполнение. """
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, CreateAPIView
 from rest_framework.response import Response
 from django.utils import timezone
 
 from questionnaires.models import Questionnaire
 from questionnaires.serializers import QuestionnaireSerializer
 from answers.models import PassedSurvey
-from answers.serializers import PassedSurveyCreateSerializer, PassedSurveyListSerializer
+from answers.serializers import (PassedSurveyCreateSerializer, PassedSurveyListSerializer,
+                                 PassesSurveySimpleCreateSerializer)
 
 
 class ActiveSurveyView(ListAPIView):
@@ -48,4 +49,18 @@ class PassedSurveyView(ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         self.serializer_class = PassedSurveyCreateSerializer
+        return self.create(request, *args, **kwargs)
+
+
+class PassedSurveySimpleCreateView(ListCreateAPIView):
+    """ Вид для сохранения опросов с упрощённым запросом и получения списка опросов. """
+    queryset = PassedSurvey.objects.all()
+    model = PassedSurvey
+
+    def get(self, request, *args, **kwargs):
+        self.serializer_class = PassedSurveyListSerializer
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.serializer_class = PassesSurveySimpleCreateSerializer
         return self.create(request, *args, **kwargs)
