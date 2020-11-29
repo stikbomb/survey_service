@@ -26,6 +26,17 @@ class ActiveSurveyByUserIdView(ActiveSurveyView):
         return Response(serializer.data)
 
 
+class PassedSurveyByUserIdView(ListAPIView):
+    """ Вид для получения опросов, которые прошёл пользователь. """
+    queryset = PassedSurvey.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs['pk']
+        result = self.queryset.filter(user=pk)
+        serializer = PassedSurveyListSerializer(result, many=True)
+        return Response(serializer.data)
+
+
 class PassedSurveyView(ListCreateAPIView):
     """ Вид для получения и сохранения пройденных опросов. """
     queryset = PassedSurvey.objects.all()

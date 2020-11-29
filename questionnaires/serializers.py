@@ -49,7 +49,6 @@ class QuestionnaireSerializer(ModelSerializer):
         model = Questionnaire
         fields = 'id', 'title', 'beginning_date', 'expiration_date', 'description', 'questions'
 
-
     def validate(self, attrs):
         if self.partial:
             return attrs
