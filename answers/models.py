@@ -11,13 +11,18 @@ from django.db.models import (Model, PositiveIntegerField, CharField, TextField,
 from questionnaires.models import Questionnaire
 
 
-class PassedSurvey(Questionnaire):
+class PassedSurvey(Model):
     """
     Модель пройдегго опроса.
     Включает в себя поля оригинального запроса, id пользователя, дату и время завершения опроса
     и ссылку на модель опроса. """
     user = PositiveIntegerField()
     created_at = DateTimeField()
+
+    title = CharField(max_length=100)
+    beginning_date = DateField()
+    expiration_date = DateField()
+    description = TextField()
 
     questionnaire = ForeignKey(
         Questionnaire,
