@@ -1,8 +1,10 @@
 """ Виды для работы с активными опросами - получение и заполнение. """
+from rest_framework import status
+from django.utils import timezone
+
 from answers.models import PassedSurvey
 from answers.serializers import (PassedSurveyCreateSerializer, PassedSurveyListSerializer,
                                  PassesSurveySimpleCreateSerializer)
-from django.utils import timezone
 from questionnaires.models import Questionnaire
 from questionnaires.serializers import QuestionnaireSerializer
 from rest_framework.generics import ListAPIView, ListCreateAPIView
@@ -63,12 +65,22 @@ class PassedSurveyView(ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         self.serializer_class = PassedSurveyCreateSerializer
-        return self.create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        survey = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        result_serializer = PassedSurveyListSerializer(survey)
+        return Response(result_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class PassedSurveySimpleCreateView(PassedSurveyView):
     """ Вид для сохранения опросов с упрощённым запросом и получения списка опросов. """
+    serializer_class = PassesSurveySimpleCreateSerializer
 
     def post(self, request, *args, **kwargs):
-        self.serializer_class = PassesSurveySimpleCreateSerializer
-        return self.create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        survey = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        result_serializer = PassedSurveyListSerializer(survey)
+        return Response(result_serializer.data, status=status.HTTP_201_CREATED, headers=headers)

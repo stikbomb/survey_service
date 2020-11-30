@@ -1,15 +1,16 @@
 """ Сериализаторы для работы с моделями опросов, вопросов и вариантов ответов. """
-from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import (ModelSerializer, ValidationError, RelatedField, PrimaryKeyRelatedField,
+                                        IntegerField)
 
 from .models import Questionnaire, Question, PossibleAnswer
 
 
 class PossibleAnswerSerializer(ModelSerializer):
     """ Сериализатор возможного варианта ответа. """
-
+    question = PrimaryKeyRelatedField(queryset=Question.objects.all(), required=False)
     class Meta:
         model = PossibleAnswer
-        exclude = ('question',)
+        fields = '__all__'
 
 
 class QuestionSerializer(ModelSerializer):

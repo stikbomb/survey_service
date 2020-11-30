@@ -12,3 +12,9 @@ class EditionError(APIException):
     """ Исключение для случаев изменения запрещённых к изменению полей. """
     status_code = 400
     default_code = 'EDITION_ERROR'
+
+
+class NestedFieldEditionError(APIException):
+    """ Исключения для случаев попытки редактирования связанных объектов через сериализатор объекта. """
+    status_code = 300
+    default_code = 'NESTED_EDITION_ERROR'
