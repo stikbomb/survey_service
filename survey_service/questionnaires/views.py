@@ -2,6 +2,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAdminUser
 from django.utils.dateparse import parse_date
+from rest_framework.response import Response
 
 from .serializers import QuestionnaireSerializer, QuestionSerializer, PossibleAnswerSerializer
 from .models import Questionnaire, Question, PossibleAnswer
@@ -45,6 +46,7 @@ class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
             raise NestedFieldEditionError('Для редактирования доступны только поля объекта Questionnaire.'
                                           'Для редактирования вложенного варианта ответа воспользуйтесь '
                                           'соответствующей точкой api/question/{id}')
+        return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)
@@ -95,6 +97,7 @@ class QuestionRUDView(RetrieveUpdateDestroyAPIView):
             raise NestedFieldEditionError('Для редактирования доступны только поля объекта Question.'
                                           'Для редактирования вложенного варианта ответа воспользуйтесь '
                                           'соответствующей точкой api/possible_answer/{id}')
+        return Response(serializer.data)
 
 
 class PossibleAnswerCLView(ListCreateAPIView):
