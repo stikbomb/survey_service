@@ -1,7 +1,7 @@
 """ Сериализаторы для работы с моделями опросов, вопросов и вариантов ответов. """
 from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, PrimaryKeyRelatedField
 
-from questionnaires.models import Questionnaire, Question, PossibleAnswer
+from .models import Questionnaire, Question, PossibleAnswer
 
 
 class PossibleAnswerSerializer(ModelSerializer):
