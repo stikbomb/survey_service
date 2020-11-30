@@ -16,5 +16,5 @@ class EditionError(APIException):
 
 class NestedFieldEditionError(APIException):
     """ Исключения для случаев попытки редактирования связанных объектов через сериализатор объекта. """
-    status_code = 300
+    status_code = 400
     default_code = 'NESTED_EDITION_ERROR'
