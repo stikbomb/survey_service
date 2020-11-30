@@ -1,0 +1,120 @@
+get:
+  get:
+  tags:
+  - answers
+  description: Получение пройденных опросов (всех или пройденных конкретным пользователем)
+  parameters:
+        - in: path
+          name: user
+          schema:
+            type: integer
+          required: False
+          description: Получение пройденных конкретным пользователем опросов
+  responses:
+    200:
+      schema:
+        $ref: '#/def/ListResponse'
+
+post:
+  tags:
+  - answers
+  description: Создание пройденного опроса
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/CreateRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PassedSurvey'
+
+
+def:
+  ListResponse:
+    type:
+      array
+    items:
+      $ref: '#/def/PassedSurvey'
+
+  PassedSurvey:
+
+    type: object
+    properties:
+      user:
+        type: integer
+        example: 123
+      title:
+        type: string
+        example:  Простой опросник
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+      questions:
+        type: array
+        items:
+          $ref: '#/def/QuestionResponseSchema'
+        example:
+        - text: Как Вас зовут?
+          type: T
+          answers:
+            - Александр
+        
+        - text: Сколько Вам лет?
+          type: O
+          answers:
+            - 26-35
+
+        - text: Ваши интересы?
+          type: M
+          answers:
+            -  Технологии
+            -  Литература
+            -  Путешествия
+
+
+  QuestionResponseSchema:
+    type: object
+    properties:
+      text:
+        type: string
+      type:
+        type: string
+      answers:
+        type: array
+
+  CreateRequest:
+    type: object
+    properties:
+      questionnaire:
+        type: integer
+        example: 1
+      user:
+        type: integer
+        example: 123
+      passed_questions:
+        type: array
+        example:
+        - question: 1
+          type: T
+          answers:
+            - Александр
+        - question: 2
+          type: O
+          answers:
+            - 2
+        - question: 3
+          type: M
+          answers:
+            - 5
+            - 7
+            - 9
+
+

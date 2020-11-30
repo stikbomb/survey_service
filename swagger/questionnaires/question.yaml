@@ -1,0 +1,150 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение вопроса по его ID
+  responses:
+    200:
+      schema:
+        $ref: '#/def/GetObject'
+
+put:
+  tags:
+  - questionnaires
+  description: 'Полное изменение вопроса по его ID. Для редактирования доступны только поля объекта Question. Для реадктирования вложенных полей необходимо воспользоваться соответствующими точками. Тип вопроса изменять нельзя.'
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PutRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PutResponse'
+    400:
+      description: Code 400, bad request
+
+patch:
+  tags:
+  - questionnaires
+  description: Частичное изменение опроса по его ID. Для редактирования доступны только поля объекта Question. Для реадктирования вложенных полей необходимо воспользоваться соответствующими точками. Тип вопроса изменять нельзя.'
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PatchRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PatchResponse'
+    400:
+      description: Code 400, bad request
+
+delete:
+  tags:
+  - questionnaires
+  description:  Удаление вопроса по его ID. Связанные объекты (варианты ответов) будут удалены.
+  responses:
+    204:
+      description: "Code 204, object deleted"
+
+def:
+
+  GetObject:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 4
+      questionnaire: 
+        type: integer
+        example: 1
+      text:
+        type: string
+        example: Из какого вы города?
+      type:
+        type: string
+        example: O
+      possible_answers:
+        type: array
+        example:
+        - id: 10
+          text: Москва
+        - id: 11
+          text: Владивосток
+        - id: 12
+          text: Калиниград      
+  
+  PutRequest:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 4
+      questionnaire: 
+        type: integer
+        example: 2
+      text:
+        type: string
+        example: Какой Ваш любимый город?
+      type:
+        type: string
+        example: O
+
+  PutResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 4
+      questionnaire: 
+        type: integer
+        example: 2
+      text:
+        type: string
+        example: Какой Ваш любимый город?
+      type:
+        type: string
+        example: O
+      possible_answers:
+        type: array
+        example:
+        - id: 10
+          text: Москва
+        - id: 11
+          text: Владивосток
+        - id: 12
+          text: Калиниград      
+
+  PatchRequest:
+    type: object
+    properties:
+      text:
+        type: string
+        example: Какой Ваш любимый город?
+
+  PatchResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 4
+      questionnaire: 
+        type: integer
+        example: 1
+      text:
+        type: string
+        example: Какой Ваш любимый город?
+      type:
+        type: string
+        example: O
+      possible_answers:
+        type: array
+        example:
+        - id: 10
+          text: Москва
+        - id: 11
+          text: Владивосток
+        - id: 12
+          text: Калиниград      

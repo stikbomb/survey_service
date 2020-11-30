@@ -1,0 +1,45 @@
+post:
+  tags:
+  - admin
+  description: Точка логина суперпользователя.
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/LoginRequest'
+  responses:
+    200:
+      description: Code 200, success
+      schema:
+        $ref: '#/def/LoginResponse'
+    400:
+      description: Code 400, bad request.
+
+def:
+  
+  LoginRequest:
+    type: object
+    properties:
+      username:
+        type: string
+        example: MegaAdmin
+      password:
+        type: string
+        example: SecretPassword
+  
+  LoginResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      last_login:
+        type: string
+        example: '2020-11-30T07:16:53.720179Z'
+      username:
+        type: string
+        example: MegaAdmin
+      is_superuser:
+        type: boolean
+        example: True

@@ -1,0 +1,254 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение опроса по его ID
+  responses:
+    200:
+      schema:
+        $ref: './common_questionnaire.yaml'
+
+put:
+  tags:
+  - questionnaires
+  description: 'Полное изменение опроса по его ID. Для редактирования доступны только поля объекта Questionnaire. Для реадктирования вложенных полей необходимо воспользоваться соответствующими точками.'
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PutRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PutResponse'
+
+patch:
+  tags:
+  - questionnaires
+  description: Частичное изменение опроса по его ID. Для редактирования доступны только поля объекта Questionnaire. Для реадктирования вложенных полей необходимо воспользоваться соответствующими точками.'
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PatchRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PatchResponse'
+
+delete:
+  tags:
+  - questionnaires
+  description:  Удаление опроса по его ID. Связанные объекты (вопросы и варианты ответов) будут удалены.
+  responses:
+    204:
+      description: "Code 204, object deleted"
+
+def:
+  CreateRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example:  Простой опросник
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+      questions:
+        type: array
+        items:
+          $ref: '#/def/QuestionRequestSchema'
+        example:
+        - text: Как Вас зовут?
+          type: T
+          possible_answers: []
+        
+        - text: Сколько Вам лет?
+          type: O
+          possible_answers:
+            - text: 18-25
+            - text: 26-35
+            - text: 36-45
+            - text: 46+
+
+        - text: Ваши интересы?
+          type: M
+          possible_answers:
+            - text: Дизайн
+            - text: Живопись
+            - text: Технологии
+            - text: Литература
+            - text: Путешествия
+
+  QuestionRequestSchema:
+    type: object
+    properties:
+      text:
+        type: string
+      type:
+        type: string
+      possible_answers:
+        type: array
+
+  PutRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example:  Не очень простой опрос
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+  
+  PatchRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example:  Довольно сложный опрос
+
+  PutResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example:  Не очень простой опросник
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+      questions:
+        type: array
+        items:
+          $ref: '#/def/QuestionResponseSchema'
+        example:
+        - id: 1
+          questionnaire: 1
+          text: Как Вас зовут?
+          type: T
+          possible_answers: []
+        
+        - id: 2
+          questionnaire: 1
+          text: Сколько Вам лет?
+          type: O
+          possible_answers:
+            - id: 1
+              text: 18-25
+            - id: 2
+              text: 26-35
+            - id: 3
+              text: 36-45
+            - id: 4
+              text: 46+
+
+        - id: 3
+          questionnaire: 1
+          text: Ваши интересы?
+          type: M
+          possible_answers:
+            - id: 5
+              text: Дизайн
+            - id: 6
+              text: Живопись
+            - id: 7
+              text: Технологии
+            - id: 8
+              text: Литература
+            - id: 9
+              text: Путешествия
+
+
+  QuestionResponseSchema:
+    type: object
+    properties:
+      id:
+        type: integer
+      questionnaire:
+        type: integer
+      text:
+        type: string
+      type:
+        type: string
+      possible_answers:
+        type: array
+  
+  PatchResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example:  Довольно сложный опрос
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+      questions:
+        type: array
+        items:
+          $ref: '#/def/QuestionResponseSchema'
+        example:
+        - id: 1
+          questionnaire: 1
+          text: Как Вас зовут?
+          type: T
+          possible_answers: []
+        
+        - id: 2
+          questionnaire: 1
+          text: Сколько Вам лет?
+          type: O
+          possible_answers:
+            - id: 1
+              text: 18-25
+            - id: 2
+              text: 26-35
+            - id: 3
+              text: 36-45
+            - id: 4
+              text: 46+
+
+        - id: 3
+          questionnaire: 1
+          text: Ваши интересы?
+          type: M
+          possible_answers:
+            - id: 5
+              text: Дизайн
+            - id: 6
+              text: Живопись
+            - id: 7
+              text: Технологии
+            - id: 8
+              text: Литература
+            - id: 9
+              text: Путешествия

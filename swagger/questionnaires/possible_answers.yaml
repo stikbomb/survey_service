@@ -1,0 +1,64 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение всех вариантов ответа
+  responses:
+    200:
+      schema:
+        $ref: '#/def/AnswersList'
+
+post:
+  tags:
+  - questionnaires
+  description: Создание варианта ответа
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/CreateRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/CreateResponse'
+
+def:
+  AnswersList:
+    type: array
+    example:
+      - id: 1
+        question: 1
+        text: 18-25
+      - id: 2
+        question: 1
+        text: 26-35
+      - id: 3
+        question: 1
+        text: 36-45
+      - id: 4
+        question: 1
+        text: 46+
+
+  CreateRequest:
+    type: object
+    properties:
+      question:
+        type: integer
+        example: 3
+      text:
+        type: string
+        example: 90+
+    
+  CreateResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 5
+      question:
+        type: integer
+        example: 3
+      text:
+        id: 15
+        type: string
+        example: 90+

@@ -1,0 +1,7 @@
+post:
+  tags:
+  - admin
+  description: Точка для выхода из сессии.
+  responses:
+    200:
+      description: Code 200, success

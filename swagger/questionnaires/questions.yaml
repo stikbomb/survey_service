@@ -1,0 +1,124 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение всех вопросов
+  responses:
+    200:
+      schema:
+        $ref: '#/def/QuestionsList'
+
+post:
+  tags:
+  - questionnaires
+  description: Создание вопроса
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/CreateRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/CreateResponse'
+
+def:
+  QuestionsList:
+    type: array
+    items:
+      $ref: '#/def/QuestionResponseSchema'
+    example:
+    - id: 1
+      questionnaire: 1
+      text: Как Вас зовут?
+      type: T
+      possible_answers: []
+    
+    - id: 2
+      questionnaire: 1
+      text: Сколько Вам лет?
+      type: O
+      possible_answers:
+        - id: 1
+          text: 18-25
+        - id: 2
+          text: 26-35
+        - id: 3
+          text: 36-45
+        - id: 4
+          text: 46+
+
+    - id: 3
+      questionnaire: 1
+      text: Ваши интересы?
+      type: M
+      possible_answers:
+        - id: 5
+          text: Дизайн
+        - id: 6
+          text: Живопись
+        - id: 7
+          text: Технологии
+        - id: 8
+          text: Литература
+        - id: 9
+          text: Путешествия
+
+  CreateRequest:
+    type: object
+    properties:
+      questionnaire: 
+        type: integer
+        example: 1
+      text:
+        type: string
+        example: Из какого вы города?
+      type:
+        type: string
+        example: T
+      possible_answers:
+        type: array
+        example:
+        - text: Москва
+        - text: Владивосток
+        - text: Калиниград
+    
+
+  QuestionResponseSchema:
+    type: object
+    properties:
+      id:
+        type: integer
+      questionnaire:
+        type: integer
+      text:
+        type: string
+      type:
+        type: string
+      possible_answers:
+        type: array
+
+  CreateResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 4
+      questionnaire: 
+        type: integer
+        example: 1
+      text:
+        type: string
+        example: Из какого вы города?
+      type:
+        type: string
+        example: O
+      possible_answers:
+        type: array
+        example:
+        - id: 10
+          text: Москва
+        - id: 11
+          text: Владивосток
+        - id: 12
+          text: Калиниград        

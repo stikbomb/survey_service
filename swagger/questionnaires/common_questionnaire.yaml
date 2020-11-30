@@ -1,0 +1,73 @@
+type: object
+properties:
+  id:
+    type: integer
+    example: 1
+  title:
+    type: string
+    example:  Простой опросник
+  beginning_date:
+    type: string
+    example: '2020-11-11'
+  expiration_date:
+    type: string
+    example: '2020-12-12'
+  description:
+    type: string
+    example: Простой опросник из трёх вопросов разных видов
+  questions:
+    type: array
+    items:
+      $ref: '#/def/QuestionResponseSchema'
+    example:
+    - id: 1
+      questionnaire: 1
+      text: Как Вас зовут?
+      type: T
+      possible_answers: []
+    
+    - id: 2
+      questionnaire: 1
+      text: Сколько Вам лет?
+      type: O
+      possible_answers:
+        - id: 1
+          text: 18-25
+        - id: 2
+          text: 26-35
+        - id: 3
+          text: 36-45
+        - id: 4
+          text: 46+
+
+    - id: 3
+      questionnaire: 1
+      text: Ваши интересы?
+      type: M
+      possible_answers:
+        - id: 5
+          text: Дизайн
+        - id: 6
+          text: Живопись
+        - id: 7
+          text: Технологии
+        - id: 8
+          text: Литература
+        - id: 9
+          text: Путешествия
+
+
+def:
+  QuestionResponseSchema:
+    type: object
+    properties:
+      id:
+        type: integer
+      questionnaire:
+        type: integer
+      text:
+        type: string
+      type:
+        type: string
+      possible_answers:
+        type: array

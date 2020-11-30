@@ -1,0 +1,81 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение всех опросов
+  responses:
+    200:
+      schema:
+        $ref: '#/def/ListResponse'
+
+post:
+  tags:
+  - questionnaires
+  description: Создание опроса
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/CreateRequest'
+  responses:
+    200:
+      schema:
+        $ref: './common_questionnaire.yaml'
+
+def:
+  ListResponse:
+    type:
+      array
+    items:
+      $ref: './common_questionnaire.yaml'
+  
+  CreateRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example:  Простой опросник
+      beginning_date:
+        type: string
+        example: '2020-11-11'
+      expiration_date:
+        type: string
+        example: '2020-12-12'
+      description:
+        type: string
+        example: Простой опросник из трёх вопросов разных видов
+      questions:
+        type: array
+        items:
+          $ref: '#/def/QuestionRequestSchema'
+        example:
+        - text: Как Вас зовут?
+          type: T
+          possible_answers: []
+        
+        - text: Сколько Вам лет?
+          type: O
+          possible_answers:
+            - text: 18-25
+            - text: 26-35
+            - text: 36-45
+            - text: 46+
+
+        - text: Ваши интересы?
+          type: M
+          possible_answers:
+            - text: Дизайн
+            - text: Живопись
+            - text: Технологии
+            - text: Литература
+            - text: Путешествия
+
+  QuestionRequestSchema:
+    type: object
+    properties:
+      text:
+        type: string
+      type:
+        type: string
+      possible_answers:
+        type: array

@@ -1,0 +1,24 @@
+get:
+  get:
+  tags:
+  - answers
+  description: Получение активных опросов (всех или доступных конкретному пользователю)
+  parameters:
+        - in: path
+          name: user
+          schema:
+            type: integer
+          required: False
+          description: Получение активных опросов, которые еще не прошёл пользователь
+  responses:
+    200:
+      schema:
+        $ref: '#/def/ListResponse'
+
+def:
+  ListResponse:
+    type:
+      array
+    items:
+      $ref: './common_survey.yaml'
+  

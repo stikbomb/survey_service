@@ -1,0 +1,115 @@
+get:
+  tags:
+  - questionnaires
+  description: Получение варианта ответа по его ID
+  responses:
+    200:
+      schema:
+        $ref: '#/def/GetObject'
+
+put:
+  tags:
+  - questionnaires
+  description: 'Полное изменение варианта ответа по его ID.'
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PutRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PutResponse'
+    400:
+      description: Code 400, bad request
+patch:
+  tags:
+  - questionnaires
+  description: Частичное изменение опроса по его ID.
+  parameters:
+  - in: body
+    name: body
+    required: True
+    schema:
+      $ref: '#/def/PatchRequest'
+  responses:
+    200:
+      schema:
+        $ref: '#/def/PatchResponse'
+    400:
+      description: Code 400, bad request
+
+delete:
+  tags:
+  - questionnaires
+  description:  Удаление вопроса по его ID.
+  responses:
+    204:
+      description: "Code 204, object deleted"
+
+def:
+
+  GetObject:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 5
+      question:
+        type: integer
+        example: 3
+      text:
+        id: 15
+        type: string
+        example: 90+    
+  
+  PutRequest:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 5
+      question:
+        type: integer
+        example: 4
+      text:
+        id: 15
+        type: string
+        example: 85+
+
+  PutResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 5
+      question:
+        type: integer
+        example: 4
+      text:
+        id: 15
+        type: string
+        example: 85+
+
+  PatchRequest:
+    type: object
+    properties:
+      text:
+        id: 15
+        type: string
+        example: 80+
+
+  PatchResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 5
+      question:
+        type: integer
+        example: 4
+      text:
+        id: 15
+        type: string
+        example: 85+

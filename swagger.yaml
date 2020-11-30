@@ -1,0 +1,53 @@
+swagger: "2.0"
+info:
+  description: "Survey service API docs"
+  version: "0.0.1"
+  title: "Survey service"
+
+host: "127.0.0.1:8020"
+basePath: "/api"
+tags:
+- name: admin
+- name: questionnaires
+- name: answers
+
+
+schemes:
+- "http"
+
+
+paths:
+# USERS PATHS
+  /admin/login:
+    $ref: './swagger/admin/login.yaml'
+  /admin/logout:
+    $ref: './swagger/admin/logout.yaml'
+
+# QUESTIONNAIRES PATHS
+  /questionnaires:
+    $ref: './swagger/questionnaires/questionnaires.yaml'
+  
+  /questionnaire/{id}:
+    $ref: './swagger/questionnaires/questionnaire.yaml'
+
+  /questions:
+    $ref: './swagger/questionnaires/questions.yaml'
+  
+  /question/{id}:
+    $ref: './swagger/questionnaires/question.yaml'
+  
+  /possible_answers/:
+    $ref: './swagger/questionnaires/possible_answers.yaml'
+  
+  /possible_answer/{id}:
+    $ref: './swagger/questionnaires/possible_answer.yaml'
+
+# ANSWERS PATHS
+  /active_surveys?user=123:
+    $ref: './swagger/answers/active_surveys.yaml'
+  
+  /passed_survey:
+    $ref: './swagger/answers/passed_surveys.yaml'
+  
+  /alternative_passed_survey:
+    $ref: './swagger/answers/alternative_passed_surveys.yaml'
