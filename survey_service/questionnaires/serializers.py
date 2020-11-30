@@ -1,6 +1,6 @@
 """ Сериализаторы для работы с моделями опросов, вопросов и вариантов ответов. """
-from rest_framework.serializers import (ModelSerializer, ValidationError, RelatedField, PrimaryKeyRelatedField,
-                                        IntegerField)
+from rest_framework.serializers import ModelSerializer, ValidationError, PrimaryKeyRelatedField
+from django.db import transaction
 
 from .models import Questionnaire, Question, PossibleAnswer
 
@@ -8,6 +8,7 @@ from .models import Questionnaire, Question, PossibleAnswer
 class PossibleAnswerSerializer(ModelSerializer):
     """ Сериализатор возможного варианта ответа. """
     question = PrimaryKeyRelatedField(queryset=Question.objects.all(), required=False)
+
     class Meta:
         model = PossibleAnswer
         fields = '__all__'
@@ -17,6 +18,7 @@ class QuestionSerializer(ModelSerializer):
     """ Сериализатор вопроса. """
     possible_answers = PossibleAnswerSerializer(many=True)
     questionnaire = PrimaryKeyRelatedField(queryset=Questionnaire.objects.all(), required=False)
+
     class Meta:
         model = Question
         fields = 'id', 'questionnaire', 'text', 'type', 'possible_answers'
@@ -33,6 +35,7 @@ class QuestionSerializer(ModelSerializer):
 
         return attrs
 
+    @transaction.atomic
     def create(self, validated_data, **kwargs):
         possible_answers_data = validated_data.pop('possible_answers')
         question = Question.objects.create(**validated_data)
@@ -62,6 +65,7 @@ class QuestionnaireSerializer(ModelSerializer):
 
         return attrs
 
+    @transaction.atomic
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
 

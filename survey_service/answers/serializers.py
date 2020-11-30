@@ -3,6 +3,7 @@ from rest_framework.serializers import (Serializer, PrimaryKeyRelatedField, Choi
                                         IntegerField, SlugRelatedField, ModelSerializer)
 from django.utils import timezone
 from django.forms.models import model_to_dict
+from django.db import transaction
 
 from questionnaires.models import Questionnaire, Question, PossibleAnswer
 from .models import PassedSurvey, PassedQuestion, Answer
@@ -47,6 +48,7 @@ class PassedSurveyCreateSerializer(Serializer):
     user = IntegerField()
     passed_questions = PassedQuestionSerializer(many=True)
 
+    @transaction.atomic
     def create(self, validated_data):
         questions_data = validated_data.pop('passed_questions')
         survey_data = model_to_dict(validated_data['questionnaire'])
@@ -101,6 +103,7 @@ class PassedQuestionSimpleCreateSerializer(ModelSerializer):
         model = PassedQuestion
         fields = '__all__'
 
+    @transaction.atomic
     def create(self, validated_data):
         answers_data = validated_data.pop('answers')
 
