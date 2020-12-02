@@ -115,7 +115,7 @@ class PassedQuestionSimpleCreateSerializer(ModelSerializer):
         return question
 
 
-class PassesSurveySimpleCreateSerializer(ModelSerializer):
+class PassedSurveySimpleCreateSerializer(ModelSerializer):
     """ Сериализатор для добавления пройденного опроса с простой формой запроса. """
     passed_questions = PassedQuestionSimpleCreateSerializer(many=True)
 
