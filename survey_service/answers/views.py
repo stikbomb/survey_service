@@ -13,6 +13,8 @@ from rest_framework.response import Response
 
 class ActiveSurveyView(ListAPIView):
     """ Вид для получения всеъ активных опросов. """
+    model = Questionnaire
+    serializer_class = QuestionnaireSerializer
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
@@ -22,20 +24,6 @@ class ActiveSurveyView(ListAPIView):
             queryset = queryset.exclude(passed_surveys__user=user_id)
 
         return queryset
-
-    model = Questionnaire
-    serializer_class = QuestionnaireSerializer
-
-
-class PassedSurveyByUserIdView(ListAPIView):
-    """ Вид для получения опросов, которые прошёл пользователь. """
-    queryset = PassedSurvey.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-        result = self.queryset.filter(user=pk)
-        serializer = PassedSurveyListSerializer(result, many=True)
-        return Response(serializer.data)
 
 
 class PassedSurveyView(ListCreateAPIView):

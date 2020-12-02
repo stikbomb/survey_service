@@ -62,5 +62,11 @@ def correct_data():
     return get_data()
 
 
+def correct_data_another_user():
+    data = get_data()
+    data['user'] = 777
+    return data
+
+
 def correct_alt_data():
     return get_alt_data()
