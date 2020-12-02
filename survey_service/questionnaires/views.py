@@ -2,7 +2,6 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAdminUser
 from django.utils.dateparse import parse_date
-from rest_framework.response import Response
 
 from .serializers import QuestionnaireSerializer, QuestionSerializer, PossibleAnswerSerializer
 from .models import Questionnaire, Question, PossibleAnswer
@@ -36,17 +35,13 @@ class QuestionnaireRUDView(RetrieveUpdateDestroyAPIView):
             pass
 
     def patch(self, request, *args, **kwargs):
+        self._check_date_change(request)
         try:
-            self._check_date_change(request)
-            instance = self.get_object()
-            serializer = self.serializer_class(instance, data=request.data, partial=True)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
+            return self.partial_update(request, *args, **kwargs)
         except AssertionError:
             raise NestedFieldEditionError('Для редактирования доступны только поля объекта Questionnaire.'
                                           'Для редактирования вложенного варианта ответа воспользуйтесь '
                                           'соответствующей точкой api/question/{id}')
-        return Response(serializer.data)
 
     def put(self, request, *args, **kwargs):
         return self.patch(request, *args, **kwargs)
@@ -69,12 +64,14 @@ class QuestionRUDView(RetrieveUpdateDestroyAPIView):
     model = Question
     serializer_class = QuestionSerializer
 
-    def delete(self, request, *args, **kwargs):
+    def _check_left_question_count(self):
         instance = self.get_object()
         if Question.objects.filter(questionnaire_id=instance.questionnaire).count() == 2:
             raise DeletionError(detail='Невозможно удалить вопрос: опрос должен содержать минимум два вопроса.')
 
-        return super().delete(self, request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        self._check_left_question_count()
+        return self.destroy(request, *args, **kwargs)
 
     def _check_type_change(self, request):
         try:
@@ -87,17 +84,13 @@ class QuestionRUDView(RetrieveUpdateDestroyAPIView):
         return self.patch(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
+        self._check_type_change(request)
         try:
-            self._check_type_change(request)
-            instance = self.get_object()
-            serializer = self.serializer_class(instance, data=request.data, partial=True)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
+            return self.partial_update(request, *args, **kwargs)
         except AssertionError:
             raise NestedFieldEditionError('Для редактирования доступны только поля объекта Question.'
                                           'Для редактирования вложенного варианта ответа воспользуйтесь '
                                           'соответствующей точкой api/possible_answer/{id}')
-        return Response(serializer.data)
 
 
 class PossibleAnswerCLView(ListCreateAPIView):
@@ -117,10 +110,12 @@ class PossibleAnswerRUDView(RetrieveUpdateDestroyAPIView):
     model = PossibleAnswer
     serializer_class = PossibleAnswerSerializer
 
-    def delete(self, request, *args, **kwargs):
+    def _check_left_question_count(self):
         instance = self.get_object()
         if PossibleAnswer.objects.filter(question_id=instance.question).count() == 2:
             raise DeletionError(
                 detail='Невозможно удалить вариант отвека: вопрос должен содержать минимум два варианта.')
 
-        return super().delete(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        self._check_left_question_count()
+        return self.destroy(request, *args, **kwargs)
