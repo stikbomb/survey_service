@@ -1,22 +1,15 @@
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .data import questionnaire_data, question_data
+from core.setups import create_questionnaire
+from .data import question_data
 from ..models import Questionnaire, Question
 
 
 class QuestionsTest(APITestCase):
     def setUp(self):
-        self.username = 'admin'
-        self.email = 'admin@example.com'
-        self.password = 123
-
-        self.user = User.objects.create_superuser(self.username, self.email, self.password)
-        self.client.login(username=self.username, password=self.password)
-        self.client.post(reverse('questionnaires:questionnaire_list'),
-                         questionnaire_data.correct_create_data(), format='json')
+        create_questionnaire(self, login=True)
         self.questionnaire = Questionnaire.objects.all().first()
 
         self.url = reverse('questionnaires:question_list')
@@ -47,14 +40,7 @@ class QuestionsTest(APITestCase):
 
 class QuestionTest(APITestCase):
     def setUp(self):
-        self.username = 'admin'
-        self.email = 'admin@example.com'
-        self.password = 123
-
-        self.user = User.objects.create_superuser(self.username, self.email, self.password)
-        self.client.login(username=self.username, password=self.password)
-        self.client.post(reverse('questionnaires:questionnaire_list'),
-                         questionnaire_data.correct_create_data(), format='json')
+        create_questionnaire(self, login=True)
         self.questionnaire = Questionnaire.objects.all().first()
 
     def get_url(self):

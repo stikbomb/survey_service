@@ -1,21 +1,15 @@
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from core.setups import create_questionnaire, admin_login
 from .data import questionnaire_data
 from ..models import Questionnaire
 
 
 class QuestionnairesTests(APITestCase):
     def setUp(self):
-        self.username = 'admin'
-        self.email = 'admin@example.com'
-        self.password = 123
-
-        self.user = User.objects.create_superuser(self.username, self.email, self.password)
-        self.client.login(username=self.username, password=self.password)
-
+        admin_login(self)
         self.url = reverse('questionnaires:questionnaire_list')
 
     def test_create_questionnaire_correct_create_data(self):
@@ -47,14 +41,7 @@ class QuestionnairesTests(APITestCase):
 
 class QuestionnaireTest(APITestCase):
     def setUp(self):
-        self.username = 'admin'
-        self.email = 'admin@example.com'
-        self.password = 123
-
-        self.user = User.objects.create_superuser(self.username, self.email, self.password)
-        self.client.login(username=self.username, password=self.password)
-        self.client.post(reverse('questionnaires:questionnaire_list'),
-                         questionnaire_data.correct_create_data(), format='json')
+        create_questionnaire(self, login=True)
         self.questionnaire = Questionnaire.objects.all().first()
 
         self.url = reverse('questionnaires:questionnaire_detail', kwargs={"pk": self.questionnaire.pk})
